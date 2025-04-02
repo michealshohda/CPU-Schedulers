@@ -1,4 +1,4 @@
-# CPU Scheduler Assignment
+# CPU Scheduler
 
 This project implements a live CPU scheduler simulation with support for multiple scheduling algorithms, including:
 
