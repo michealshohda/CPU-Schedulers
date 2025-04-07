@@ -34,7 +34,17 @@ public:
      * @param currentTime The current simulation time.
      */
     virtual void updateQueue(int currentTime) = 0;
-
+    /**
+     * @brief Determines how many time units a given process should run before yielding the CPU.
+     *
+     * This function allows the scheduler to control whether a process should run for its full
+     * remaining burst time (non-preemptive), a fixed time slice (e.g., in Round Robin), or just
+     * one unit at a time (e.g., in preemptive scheduling strategies).
+     *
+     * @param p The process to evaluate for execution.
+     * @return The number of time units the process should be allowed to run before a context switch.
+     */
+    virtual int getExecutionTimeSlice(const Process &p) = 0;
     /**
      * @brief Virtual destructor.
      */

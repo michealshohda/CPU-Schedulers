@@ -38,4 +38,12 @@ public:
      * @return Pointer to the next process or nullptr if no process is ready.
      */
     Process *getNextProcess(int currentTime) override;
+
+    /**
+     * @brief Determines how many time units a given process should run before yielding the CPU.
+     *
+     * @param p The process to evaluate for execution.
+     * @return The number of time units the process should be allowed to run before a context switch.
+     */
+    int getExecutionTimeSlice(const Process &p) override;
 };
