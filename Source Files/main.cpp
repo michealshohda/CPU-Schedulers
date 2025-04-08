@@ -4,6 +4,8 @@
 #include"PriorityPreemptiveScheduler.hpp"
 #include"RoundRobinScheduler.hpp"
 #include"StatisticsCalculator.hpp"
+#include "SJFPreemptiveScheduler.hpp"
+#include "SJFNonPreemptiveScheduler.hpp"
 #include <map>
 #include <thread>
 #include <chrono>
@@ -118,10 +120,12 @@ int main()
     cout<<"Hello to CPU Simulator\n"
     <<"\n-------------------------------------------------------\n"
     <<"Please choose the type of schedule you want:\n"
-    <<"1.FCFS Schedule\n"
-    <<"2.RoundRobin Schedule\n"
-    <<"3.Priority Preemptive Schedule\n"
-    <<"4.Priority non Preemptive Schedule\n";
+    <<"1.FCFS Scheduler\n"
+    <<"2.RoundRobin Scheduler\n"
+    <<"3.Priority Preemptive Scheduler\n"
+    <<"4.Priority non Preemptive Scheduler\n"
+    <<"5.SJF Preemptive Scheduler\n"
+    <<"6.SJF non Preemptive Scheduler\n";
     int choice;
     cin>>choice;
 
@@ -130,6 +134,8 @@ int main()
     else if(choice == 2) scheduler = new RoundRobinScheduler();
     else if(choice == 3) scheduler = new PriorityPreemptiveScheduler();
     else if(choice == 4) scheduler = new PriorityNonPreemptiveScheduler();
+    else if(choice == 5) scheduler = new SJFPScheduler();
+    else if(choice == 6) scheduler = new SJFNPScheduler();
     
     CPUSimulator sim(scheduler);
 
