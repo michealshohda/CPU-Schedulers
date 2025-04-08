@@ -27,34 +27,14 @@ Process *RoundRobinScheduler::getNextProcess(int currentTime)
 {
     if (!readyQueue.empty())
     {
-        Process current = readyQueue.front();
+        Process *next = new Process(readyQueue.front());
         readyQueue.pop();
-
-        if (current.startTime == -1)
-        {
-            current.startTime = currentTime;
-        }
-
-        int executedTime = min(timeQuantum, current.remainingTime);
-        current.remainingTime -= executedTime;
-
-        if (current.remainingTime <= 0)
-        {
-            current.finishTime = currentTime + executedTime;
-            current.isCompleted = true;
-        }
-        else
-        {
-            readyQueue.push(current); 
-        }
-
-        return current; 
+        return next;
     }
-
     return nullptr;
 }
 
-int getExecutionTimeSlice(const Process &p)
+int RoundRobinScheduler::getExecutionTimeSlice(const Process &p)
 {
-    return min(p.remainingTime, timeQuantum);
+    return min(p.remainingTime, QUANTUM_TIME);
 }

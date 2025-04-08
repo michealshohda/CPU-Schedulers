@@ -33,7 +33,7 @@ Process *FCFSScheduler::getNextProcess(int currentTime)
     return nullptr;
 }
 
-int getExecutionTimeSlice(const Process &p)
+int FCFSScheduler::getExecutionTimeSlice(const Process &p)
 {
     return p.remainingTime; // run to completion
 }

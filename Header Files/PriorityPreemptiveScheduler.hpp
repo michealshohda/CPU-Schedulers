@@ -22,7 +22,11 @@ private:
     {
         bool operator()(const Process &a, const Process &b)
         {
-            return a.priority > b.priority;
+            if (a.priority == b.priority)
+        {
+            return a.arrivalTime > b.arrivalTime; // Earlier arrival gets higher priority
+        }
+        return a.priority > b.priority;  // Lower value => Higher priority
         }
     };
 

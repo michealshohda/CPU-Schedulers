@@ -3,15 +3,15 @@
 #include "Headers.hpp"
 #include "Scheduler.hpp"
 #include "Process.hpp"
+#define QUANTUM_TIME 2
 
-class RoundRobinScheduler
+class RoundRobinScheduler:public Scheduler
 {
 private:
     std::vector<Process> pending;
     std::queue<Process> readyQueue;
 
 public:
-    static const int timeQuantum = 2; 
 
     void addProcess(const Process &p);
     void updateQueue(int currentTime);
