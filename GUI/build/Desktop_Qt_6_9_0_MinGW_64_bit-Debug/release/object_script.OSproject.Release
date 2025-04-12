@@ -1,0 +1,10 @@
+release/mainwindow.o
+release/MAINmainwindow.o
+release/cpuscheduleros.o
+release/main.o
+release/mainwindow.o
+release/qrc_resource.o
+release/qrc_qmake_qmake_qm_files.o
+release/moc_MAINmainwindow.o
+release/moc_cpuscheduleros.o
+release/moc_mainwindow.o

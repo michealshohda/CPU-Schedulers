@@ -1,0 +1,10 @@
+debug/mainwindow.o
+debug/MAINmainwindow.o
+debug/cpuscheduleros.o
+debug/main.o
+debug/mainwindow.o
+debug/qrc_resource.o
+debug/qrc_qmake_qmake_qm_files.o
+debug/moc_MAINmainwindow.o
+debug/moc_cpuscheduleros.o
+debug/moc_mainwindow.o
