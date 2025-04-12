@@ -228,23 +228,40 @@ void CPUSchedulerOS::on_OK_clicked()
         //     return;
         // }
         bool preemptive = false;
-       if (currentAlgorithm == "SJF" ) {
+        if (currentAlgorithm == "SJF" ) {
         preemptive = isPreemptive();
+            if(preemptive)
+                scheduler=new SJFPScheduler();
+            else
+                scheduler=new SJFNPScheduler();
         qDebug() << "Preemptive mode in case SJF:" << preemptive;
-         }
+        }
         if (currentAlgorithm == "PRIORITY" ) {
            preemptive = isPreemptive();
            priorityValues.clear();
            for (int i = 0; i < processCount; i++) {
                priorityValues.append(prioritySpinBoxes[i]->value());
            }
+
+           if(preemptive)
+               scheduler=new PriorityPreemptiveScheduler();
+           else
+               scheduler=new PriorityNonPreemptiveScheduler();
             qDebug() << "Collected values - priority:" << priorityValues;
             qDebug() << "Preemptive mode in case PRIORITY:" << preemptive;
-       }
-       int quantum = 0;
+        }
+        int quantum = 0;
         if (currentAlgorithm == "RR" && quantumSpinBox) {
         quantum = quantumSpinBox->value();
+            scheduler=new RoundRobinScheduler(quantum);
+
+
         qDebug() << "Time Quantum:" << quantum;
+        }
+
+        if(currentAlgorithm=="FCFS")
+        {
+            scheduler=new FCFSScheduler();
         }
         // Collect values
         burstValues.clear();
@@ -254,6 +271,21 @@ void CPUSchedulerOS::on_OK_clicked()
             burstValues.append(burstSpinBoxes[i]->value());
             arrivalValues.append(arrivalSpinBoxes[i]->value());
         }
+
+        sim=new CPUSimulator(scheduler);
+        for(int i = 0; i < processCount; i++)
+        {
+            if(currentAlgorithm=="PRIORITY")
+                sim->addProcess(Process(i+1,arrivalValues[i],burstValues[i],priorityValues[i]));
+            else
+                sim->addProcess(Process(i+1,arrivalValues[i],burstValues[i]));
+        }
+        qDebug()<<sim->getInitialTotalBurstTime();
+        sim->runSimulation();
+        qDebug()<<sim->avgWaitingTime();
+        qDebug()<<sim->avgTurnaroundTime();
+
+
 
         // Debug output
           qDebug() << "Collected values - Burst:" << burstValues;

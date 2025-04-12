@@ -9,14 +9,36 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    CPUSimulator.cpp \
+    FCFSScheduler.cpp \
+    PriorityNonPreemptiveScheduler.cpp \
+    PriorityPreemptiveScheduler.cpp \
+    RoundRobinScheduler.cpp \
+    SJFNonPreemptiveScheduler.cpp \
+    SJFPreemptiveScheduler.cpp \
+    StatisticsCalculator.cpp \
     MAINmainwindow.cpp \
     cpuscheduleros.cpp \
-    main.cpp \
-    mainwindow.cpp
+    global.cpp \
+    mainwindow.cpp \
+    main.cpp
 
 HEADERS += \
+    CPUSimulator.hpp \
+    FCFSScheduler.hpp \
+    Headers.hpp \
+    PriorityNonPreemptiveScheduler.hpp \
+    PriorityPreemptiveScheduler.hpp \
+    RoundRobinScheduler.hpp \
+    SJFNonPreemptiveScheduler.hpp \
+    SJFPreemptiveScheduler.hpp \
+    Scheduler.hpp \
+    StatisticsCalculator.hpp \
+    global.h \
+    process.hpp \
     MAINmainwindow.h \
     cpuscheduleros.h \
+    mainwindow.h \
     mainwindow.h
 
 FORMS += \
@@ -25,6 +47,7 @@ FORMS += \
     mainwindow.ui
 
 TRANSLATIONS += \
+    OSproject_en_CA.ts \
     OSproject_en_CA.ts
 CONFIG += lrelease
 CONFIG += embed_translations

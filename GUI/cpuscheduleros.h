@@ -6,6 +6,18 @@
 #include <QSpinBox>
 
 #include "mainwindow.h"
+#include"Headers.hpp"
+#include"FCFSScheduler.hpp"
+#include"PriorityNonPreemptiveScheduler.hpp"
+#include"PriorityPreemptiveScheduler.hpp"
+#include"RoundRobinScheduler.hpp"
+#include"StatisticsCalculator.hpp"
+#include "SJFPreemptiveScheduler.hpp"
+#include "SJFNonPreemptiveScheduler.hpp"
+#include"CPUSimulator.hpp"
+#include"global.h"
+
+
 
 namespace Ui {
 class CPUSchedulerOS;
@@ -50,6 +62,7 @@ private:
     QSpinBox *prioritySpin = new QSpinBox();
 
     MainWindow *mainwindow;
+
 
 };
 
