@@ -201,7 +201,7 @@
       <item>
        <widget class="QPushButton" name="finish">
         <property name="text">
-         <string>finish</string>
+         <string>Finish</string>
         </property>
        </widget>
       </item>

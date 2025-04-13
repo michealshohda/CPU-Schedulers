@@ -30,6 +30,7 @@ public:
     double avgWaitingTime();
     double avgTurnaroundTime();
     int getInitialTotalBurstTime();
+    int runSim_2();
 };
 
 #endif // CPUSIMULATOR_HPP

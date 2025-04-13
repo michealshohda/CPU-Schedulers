@@ -7,9 +7,11 @@
 #include <QTimer>
 #include <QMessageBox>
 #include <QDebug>
+#include <QTimer>
 #include"CPUSimulator.hpp"
 #include"cpuscheduleros.h"
 
+//sim->runSimulation();
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -17,7 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-     setFixedSize(1000, 600);
+    timer = new QTimer(this);
+    setFixedSize(1000, 600);
     scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);  // <-- attach your scene to the view
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
@@ -43,6 +46,8 @@ void MainWindow::clearGraph(){
 
 }
 
+
+
 void MainWindow::drawProcessBlock(int row, int startTime, int colorID, double processWidth) {
 
     int rowHeight = 40;
@@ -50,30 +55,30 @@ void MainWindow::drawProcessBlock(int row, int startTime, int colorID, double pr
     int leftMargin = 100;
 
     // Map color ID to color
-        QColor color;
-        switch (colorID % 20) {
-        case 0:  color = Qt::red; break;
-        case 1:  color = Qt::green; break;
-        case 2:  color = Qt::blue; break;
-        case 3:  color = Qt::yellow; break;
-        case 4:  color = Qt::cyan; break;
-        case 5:  color = Qt::magenta; break;
-        case 6:  color = Qt::gray; break;
-        case 7:  color = Qt::darkRed; break;
-        case 8:  color = Qt::darkGreen; break;
-        case 9:  color = Qt::darkBlue; break;
-        case 10: color = Qt::darkYellow; break;
-        case 11: color = Qt::darkCyan; break;
-        case 12: color = Qt::darkMagenta; break;
-        case 13: color = Qt::darkGray; break;
-        case 14: color = Qt::lightGray; break;
-        case 15: color = QColor("#FFA07A"); break; // LightSalmon
-        case 16: color = QColor("#20B2AA"); break; // LightSeaGreen
-        case 17: color = QColor("#9370DB"); break; // MediumPurple
-        case 18: color = QColor("#FF69B4"); break; // HotPink
-        case 19: color = QColor("#87CEFA"); break; // LightSkyBlue
-        default: color = Qt::black; break;
-        }
+    QColor color;
+    switch (colorID % 20) {
+    case 0:  color = Qt::red; break;
+    case 1:  color = Qt::green; break;
+    case 2:  color = Qt::blue; break;
+    case 3:  color = Qt::yellow; break;
+    case 4:  color = Qt::cyan; break;
+    case 5:  color = Qt::magenta; break;
+    case 6:  color = Qt::gray; break;
+    case 7:  color = Qt::darkRed; break;
+    case 8:  color = Qt::darkGreen; break;
+    case 9:  color = Qt::darkBlue; break;
+    case 10: color = Qt::darkYellow; break;
+    case 11: color = Qt::darkCyan; break;
+    case 12: color = Qt::darkMagenta; break;
+    case 13: color = Qt::darkGray; break;
+    case 14: color = Qt::lightGray; break;
+    case 15: color = QColor("#FFA07A"); break; // LightSalmon
+    case 16: color = QColor("#20B2AA"); break; // LightSeaGreen
+    case 17: color = QColor("#9370DB"); break; // MediumPurple
+    case 18: color = QColor("#FF69B4"); break; // HotPink
+    case 19: color = QColor("#87CEFA"); break; // LightSkyBlue
+    default: color = Qt::black; break;
+    }
 
 
 
@@ -87,6 +92,8 @@ void MainWindow::drawProcessBlock(int row, int startTime, int colorID, double pr
     // Draw rectangle
     scene->addRect(x, y, width, height, QPen(Qt::white), QBrush(color));
 }
+
+
 
 int label_X = 150;
 void MainWindow::drawLabels(int pid ){
@@ -162,10 +169,9 @@ void  MainWindow::drawGraphOutlines(int burstTime ){
 
 void MainWindow::on_pushButton_clicked()
 {
+    // kol dh ana brsem el graph bs
     scaleFactor = 60;
     int totalBurstTime = sim->getInitialTotalBurstTime();  // total burst time
-
-    qDebug()<<"in main"<<totalBurstTime;
     int viewWidth = ui->graphicsView->viewport()->width();
     int leftMargin = 100;  //aseb msafa ad eh abl ma arsm
     scaleFactor = (viewWidth - leftMargin - 20) / static_cast<double>(totalBurstTime);
@@ -186,12 +192,44 @@ void MainWindow::on_pushButton_clicked()
         text->setPos(x - 10, startY - 30);
     }
 
-    scene->addLine(leftMargin, startY, leftMargin, startY + numRows * rowHeight, QPen(Qt::black));
+    scene->addLine(leftMargin, startY, leftMargin, startY + numRows * rowHeight, QPen(Qt::white));
     scene->addLine(leftMargin, startY + numRows * rowHeight,
-                   leftMargin + totalBurstTime * scaleFactor, startY + numRows * rowHeight, QPen(Qt::black));
+                   leftMargin + totalBurstTime * scaleFactor, startY + numRows * rowHeight, QPen(Qt::white));
+
+
+
+
+
 
     // shelha b3den jusst for test
-    drawProcessBlock(0,0,0,1);
+    int startfrom =0;
+    int row = 0;
+    int startTime = 0;
+    int colorID = 0;
+    int processWidth = 1;
+
+    QObject::connect(timer, &QTimer::timeout, [=]() mutable {
+
+        if(startfrom >= totalBurstTime-1){
+            return; //countine
+        }
+         colorID = sim->runSim_2();
+        drawProcessBlock(row,startfrom,colorID,processWidth);
+         qDebug()<<"my PID is :"<<colorID;
+        startfrom++;
+
+    });
+    timer->start(1000); // Call every 1 second
+
+    //drawProcessBlock(row,c,colorID,processWidth);
+
+
+
+
+
+
+   //drawProcessBlock(0,start_time,pid,1);
+
 }
 
 
@@ -239,6 +277,13 @@ void MainWindow::on_newProccesButton_clicked()
     */
 
 }
+
+
+
+
+
+
+
 
 
 

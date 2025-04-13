@@ -97,7 +97,7 @@ void CPUSchedulerOS::setupPriorityUI(QGridLayout *gridLayout)
 
         // Arrival time
         QSpinBox *arrivalSpin = new QSpinBox();
-        arrivalSpin->setRange(1, 100);
+        arrivalSpin->setRange(0, 100);
         gridLayout->addWidget(arrivalSpin, row, 3);
         arrivalSpinBoxes.append(arrivalSpin);
     }
@@ -122,7 +122,7 @@ void CPUSchedulerOS::setupSJFUI(QGridLayout *gridLayout)
 
         // Arrival time
         QSpinBox *arrivalSpin = new QSpinBox();
-        arrivalSpin->setRange(1, 100);
+        arrivalSpin->setRange(0, 100);
         gridLayout->addWidget(arrivalSpin, i, 4);
         arrivalSpinBoxes.append(arrivalSpin);
 
@@ -138,7 +138,7 @@ void CPUSchedulerOS::setupRRUI(QGridLayout *gridLayout)
 
     gridLayout->addWidget(new QLabel("Time Quantum:"), 0, 0);
     quantumSpinBox = new QSpinBox(this);
-    quantumSpinBox->setRange(1, 100);
+    quantumSpinBox->setRange(0, 100);
     gridLayout->addWidget(quantumSpinBox, 0, 1);
 
 
@@ -157,7 +157,7 @@ void CPUSchedulerOS::setupRRUI(QGridLayout *gridLayout)
 
         // Arrival time
         QSpinBox *arrivalSpin = new QSpinBox();
-        arrivalSpin->setRange(1, 100);
+        arrivalSpin->setRange(0, 100);
         gridLayout->addWidget(arrivalSpin, i+1, 4);
         arrivalSpinBoxes.append(arrivalSpin);
 
@@ -200,7 +200,7 @@ void CPUSchedulerOS::setupDefaultUI(QGridLayout *gridLayout)
             burstSpinBoxes.append(burstSpin);
 
             QSpinBox* arrivalSpin = new QSpinBox(this);
-            arrivalSpin->setRange(1, 100);
+            arrivalSpin->setRange(0, 100);
             gridLayout->addWidget(arrivalSpin, i, 4);
             arrivalSpinBoxes.append(arrivalSpin);
 
@@ -280,16 +280,8 @@ void CPUSchedulerOS::on_OK_clicked()
             else
                 sim->addProcess(Process(i+1,arrivalValues[i],burstValues[i]));
         }
-        qDebug()<<sim->getInitialTotalBurstTime();
-        sim->runSimulation();
-        qDebug()<<sim->avgWaitingTime();
-        qDebug()<<sim->avgTurnaroundTime();
 
 
-
-        // Debug output
-          qDebug() << "Collected values - Burst:" << burstValues;
-          qDebug() << "Arrival:" << arrivalValues;
 
         // Success message
         QMessageBox::information(this, "Success",

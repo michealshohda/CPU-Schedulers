@@ -35,6 +35,7 @@ private:
 
     QGraphicsView *view;
     QGraphicsScene *scene;
+    QTimer *timer;
 
     double scaleFactor =40 ;
     int totalBurstTime = 0 ; // 8yrhaa ya esmak eh
