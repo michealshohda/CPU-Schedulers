@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>cloud-scheduler.svg</file>
+        <file>en_logo.png</file>
+        <file>background.png</file>
+    </qresource>
+</RCC>
