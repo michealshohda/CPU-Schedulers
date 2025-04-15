@@ -30,9 +30,9 @@
    <widget class="QGraphicsView" name="graphicsView">
     <property name="geometry">
      <rect>
-      <x>130</x>
+      <x>10</x>
       <y>180</y>
-      <width>781</width>
+      <width>971</width>
       <height>191</height>
      </rect>
     </property>
@@ -41,7 +41,7 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>550</y>
+      <y>530</y>
       <width>141</width>
       <height>29</height>
      </rect>
@@ -54,7 +54,7 @@
     <property name="geometry">
      <rect>
       <x>110</x>
-      <y>500</y>
+      <y>480</y>
       <width>81</width>
       <height>29</height>
      </rect>
@@ -83,7 +83,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>470</y>
+      <y>450</y>
       <width>191</width>
       <height>20</height>
      </rect>
@@ -102,7 +102,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>500</y>
+      <y>480</y>
       <width>91</width>
       <height>20</height>
      </rect>
@@ -111,33 +111,7 @@
      <string>Burst time</string>
     </property>
    </widget>
-   <widget class="QWidget" name="verticalLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>790</x>
-      <y>510</y>
-      <width>192</width>
-      <height>80</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout_2">
-     <item>
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Average Waiting Time = </string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Average Turnaround Time =</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QCheckBox" name="checkBox">
+   <widget class="QCheckBox" name="noLiveCheckBox">
     <property name="geometry">
      <rect>
       <x>390</x>
@@ -149,6 +123,54 @@
     <property name="text">
      <string>show chart whitout live view</string>
     </property>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>780</x>
+      <y>490</y>
+      <width>269</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Average Waiting Time = </string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="waitingTimeLable">
+         <property name="text">
+          <string>calculating</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Average Turnaround Time =</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="turnarounTimeLable">
+         <property name="text">
+          <string>calculating</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

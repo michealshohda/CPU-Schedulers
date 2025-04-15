@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+    #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include <QGraphicsView>
 #include <QGraphicsScene>
@@ -108,9 +108,15 @@ void MainWindow::drawProcessBlock(int row, int startTime, int colorID, double pr
     int height = rowHeight;
 
     // Draw rectangle and mark it as an important item is the sene so as not be deleted
-    QGraphicsRectItem *rect = scene->addRect(x, y, width, height, QPen(Qt::white), QBrush(color));
-    //rect->setData(0, true);
+    scene->addRect(x, y, width, height, QPen(Qt::white), QBrush(color));
+
     rectanglesHistory.append({startTime,colorID}) ;
+
+    //calc turnaroundtime & waiting time if this is the last rectangle to draw
+    if(startTime==totalBurstTime-1){
+        ui->turnarounTimeLable->setText(QString::number(sim->avgTurnaroundTime()));
+        ui->waitingTimeLable->setText(QString::number(sim->avgWaitingTime()));
+    }
 
 }
 
@@ -280,6 +286,7 @@ void MainWindow::on_pushButton_clicked()
 
 
 
+
       //----make a new thread------
         QThread *thread = new QThread;
 
@@ -305,7 +312,14 @@ void MainWindow::on_pushButton_clicked()
         sim->moveToThread(thread);
 
         // Start simulation when thread starts
-        connect(thread, &QThread::started, sim, &CPUSimulator::runSimulation);
+        connect(thread, &QThread::started, sim, [=]() {
+            if (ui->noLiveCheckBox->isChecked()) {
+                sim->runSimulation_notLive();
+            } else {
+
+                sim->runSimulation();
+            }
+        });
 
         thread->start();
        //---------

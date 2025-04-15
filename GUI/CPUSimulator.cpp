@@ -15,8 +15,8 @@ void CPUSimulator::runSimulation()
         emit drawLabelsWithRemainingTime(it->first,it->second.burstTime);
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    while (!processMap.empty())
-    {
+    while (true)
+    { if(processMap.empty()) continue;
         scheduler->updateQueue(currentTime);
         Process *p = scheduler->getNextProcess(currentTime);
 
@@ -67,8 +67,12 @@ void CPUSimulator::runSimulation()
 }
 
 int CPUSimulator::runSimulation_notLive(){
-    while (!processMap.empty())
-    {
+    for (auto it = processMap.begin(); it != processMap.end(); ++it) {
+        emit drawLabelsWithRemainingTime(it->first,it->second.burstTime);
+    }
+   // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    while (true)
+    { if(processMap.empty()) continue;
         scheduler->updateQueue(currentTime);
         Process *p = scheduler->getNextProcess(currentTime);
 
@@ -83,18 +87,20 @@ int CPUSimulator::runSimulation_notLive(){
             while (timeSlice-- > 0 && processMap[pid].remainingTime > 0)
             {
                 ganttChartLog.push_back({currentTime, pid});
+
                 processMap[pid].remainingTime--;
+                emit updateRemainingTime(pid,processMap[pid].remainingTime);
 
                 emit drawProcessBlock(0,currentTime,pid,1); //signal to gui
-                emit drawLabels(pid);
 
                 updateLiveTable();
-                //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+               // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
                 currentTime++;
             }
 
             if (processMap[pid].remainingTime == 0)
             {
+                emit updateRemainingTime(pid,processMap[pid].remainingTime);
                 processMap[pid].finishTime = currentTime;
                 processMap[pid].isCompleted = true;
                 completedProcesses.push_back(processMap[pid]);
@@ -109,10 +115,11 @@ int CPUSimulator::runSimulation_notLive(){
         }
         else
         {
-            //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+           // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
             currentTime++;
         }
     }
+    // emit finished();
 }
 
 
