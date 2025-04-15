@@ -48,7 +48,22 @@ void MainWindow::clearGraph(){
     }
 
 }
+//function to Write labels (Processes: and RemainingTime )
+void MainWindow::setupLegendLabels() {
+    QGraphicsTextItem* processesLabel = scene->addText("Processes:");
+    processesLabel->setDefaultTextColor(Qt::white);
+    processesLabel->setFont(QFont("Arial", 10, QFont::Bold));
 
+    processesLabel->setPos(60, 300);
+    processesLabel->setData(0, true);
+
+    QGraphicsTextItem* timeLabel = scene->addText("Remaining Time:");
+    timeLabel->setDefaultTextColor(Qt::white);
+    timeLabel->setFont(QFont("Arial", 10, QFont::Bold));
+
+    timeLabel->setPos(40, 347);
+    timeLabel->setData(0, true);
+}
 
 
 void MainWindow::drawProcessBlock(int row, int startTime, int colorID, double processWidth) {
@@ -109,6 +124,66 @@ void MainWindow::Re_drawRectangles() {
 }
 
 
+int label_X_remaining_time = 150;
+void MainWindow::writeRemainingTime(int pid, int remainingTime) {
+    // Find existing label if any
+    bool found = false;
+    QGraphicsTextItem* existingLabel = nullptr;
+
+    // Loop through all items in the scene to find matching text label
+    foreach(QGraphicsItem* item, scene->items()) {
+        QGraphicsTextItem* textItem = dynamic_cast<QGraphicsTextItem*>(item);
+        if (textItem && textItem->data(1).isValid() && textItem->data(1).toInt() == pid) {
+            // Found existing label for this pid
+            existingLabel = textItem;
+            found = true;
+            break;
+        }
+    }
+
+    if (found) {
+        // Update existing label text
+        existingLabel->setPlainText(QString::number(remainingTime));
+    } else {
+        // Create new label
+        QString timeText = QString::number(remainingTime);
+        QGraphicsTextItem* timeLabel = scene->addText(timeText);
+
+        // Set text properties
+        timeLabel->setDefaultTextColor(Qt::white);
+        timeLabel->setFont(QFont("Arial", 8));
+
+        // Find the position of the process's color square
+        QGraphicsRectItem* processRect = nullptr;
+        foreach(QGraphicsItem* item, scene->items()) {
+            QGraphicsRectItem* rectItem = dynamic_cast<QGraphicsRectItem*>(item);
+            if (rectItem && rectItem->data(2).isValid() && rectItem->data(2).toInt() == pid) {
+                processRect = rectItem;
+                break;
+            }
+        }
+
+        if (processRect) {
+            // Position the time label under the process label (which is under the square)
+            // Get the position of the rectangle
+            qreal rectX = processRect->rect().x();
+            qreal rectWidth = processRect->rect().width();
+
+            // Center the text under the rectangle
+            qreal textWidth = timeLabel->boundingRect().width();
+            qreal textX = rectX + (rectWidth - textWidth) / 2;
+            timeLabel->setPos(textX, 300 + 20 + 12); // Square height (20) + process label height (~10) + 2px margin
+        } else {
+            // Fallback positioning if process rectangle not found
+            timeLabel->setPos(label_X_remaining_time, 350);
+            label_X_remaining_time += 30;
+        }
+
+        // Store the pid as data in the text item for future identification
+        timeLabel->setData(0, true); // Mark as important (don't clear)
+        timeLabel->setData(1, pid);  // Store the pid for identification
+    }
+}
 
 int label_X = 150;
 void MainWindow::drawLabels(int pid ){
@@ -142,9 +217,24 @@ void MainWindow::drawLabels(int pid ){
     int width = 20 ;
     QGraphicsRectItem* importantItem = scene->addRect(label_X, 300, width, width, QPen(Qt::white), QBrush(color));
     importantItem->setData(0, true); // This will be kept
+
+    // Add text label below the square
+    QString labelText = QString("P%1").arg(pid);
+    QGraphicsTextItem* textLabel = scene->addText(labelText);
+
+    // Set text properties
+    textLabel->setDefaultTextColor(Qt::white); // White text for visibility on dark background
+    textLabel->setFont(QFont("Arial", 8)); // Smaller font size
+
+    // Position the text centered under the square
+    // Calculate position to center the text under the rectangle
+    qreal textWidth = textLabel->boundingRect().width();
+    qreal textX = label_X + (width - textWidth) / 2;
+    textLabel->setPos(textX, 300 + width + 2); // 2 pixels gap between square and text
+
+    // Mark text as important so it won't be cleared
+    textLabel->setData(0, true);
     label_X+= 30;
-
-
 }
 
 
@@ -186,6 +276,7 @@ void MainWindow::on_pushButton_clicked()
 
     totalBurstTime = sim->getInitialTotalBurstTime();  // total burst time
     drawGraphOutlines(totalBurstTime);
+    setupLegendLabels();
 
 
 
@@ -196,8 +287,12 @@ void MainWindow::on_pushButton_clicked()
         connect(sim, &CPUSimulator::drawProcessBlock, this, [=](int x, int y, int pid, int width){ //el variables dol seems weired
             drawProcessBlock(x, y, pid, width); // safe GUI call
         });
-        connect(sim, &CPUSimulator::drawLabels, this, [=](int pid) {
-            drawLabels(pid);  // or ui->table->repaint() etc.
+        connect(sim, &CPUSimulator::drawLabelsWithRemainingTime, this, [=](int pid, int remainingTime) {
+            drawLabels(pid);
+            writeRemainingTime(pid,remainingTime);
+        });
+        connect(sim, &CPUSimulator::updateRemainingTime, this, [=](int pid,int remainingTime) {
+            writeRemainingTime(pid,remainingTime);
         });
 
         // Cleanup after done
@@ -248,6 +343,7 @@ void MainWindow::on_newProccesButton_clicked()
     Re_drawRectangles();
     sim->addProcess(Process(pid_Global+1,sim->getCurrentTime(),ui->newProcessspinBox->value()));
     drawLabels(pid_Global+1);
+    writeRemainingTime(pid_Global+1, ui->newProcessspinBox->value());
     pid_Global++ ;
 
 

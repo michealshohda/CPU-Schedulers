@@ -39,8 +39,9 @@ public:
 signals:
     void drawProcessBlock(int row, int startTime, int colorID, int processWidth);
     void drawLabels(int pid );
+    void drawLabelsWithRemainingTime(int pid, int remainingTime);
+    void updateRemainingTime(int pid, int remainingTime);
     void finished();
-
 };
 
 #endif // CPUSIMULATOR_HPP

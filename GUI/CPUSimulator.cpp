@@ -11,7 +11,10 @@ void CPUSimulator::addProcess(const Process &p)
 
 void CPUSimulator::runSimulation()
 {
-
+    for (auto it = processMap.begin(); it != processMap.end(); ++it) {
+        emit drawLabelsWithRemainingTime(it->first,it->second.burstTime);
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     while (!processMap.empty())
     {
         scheduler->updateQueue(currentTime);
@@ -28,10 +31,11 @@ void CPUSimulator::runSimulation()
             while (timeSlice-- > 0 && processMap[pid].remainingTime > 0)
             {
                 ganttChartLog.push_back({currentTime, pid});
+
                 processMap[pid].remainingTime--;
+                emit updateRemainingTime(pid,processMap[pid].remainingTime);
 
                 emit drawProcessBlock(0,currentTime,pid,1); //signal to gui
-                emit drawLabels(pid);
 
                 updateLiveTable();
                 std::this_thread::sleep_for(std::chrono::milliseconds(1000));
@@ -40,6 +44,7 @@ void CPUSimulator::runSimulation()
 
             if (processMap[pid].remainingTime == 0)
             {
+                emit updateRemainingTime(pid,processMap[pid].remainingTime);
                 processMap[pid].finishTime = currentTime;
                 processMap[pid].isCompleted = true;
                 completedProcesses.push_back(processMap[pid]);
@@ -58,6 +63,7 @@ void CPUSimulator::runSimulation()
             currentTime++;
         }
     }
+    // emit finished();
 }
 
 int CPUSimulator::runSimulation_notLive(){

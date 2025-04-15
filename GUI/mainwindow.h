@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "Headers.hpp"
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QGraphicsTextItem>
@@ -25,7 +26,8 @@ public:
     ~MainWindow();
     void drawProcessBlock(int row, int startTime, int colorID, double processWidth);
     void drawLabels(int pid );
-
+    void writeRemainingTime(int pid, int remainingTime);
+    void setupLegendLabels();
 
 
 
