@@ -5,6 +5,8 @@
 #include <qscrollarea.h>
 #include <QMessageBox>
 #include "global.h"
+#include "mainwindow.h"
+
 
 CPUSchedulerOS::CPUSchedulerOS(QWidget *parent) :
     QDialog(parent),
@@ -290,7 +292,9 @@ void CPUSchedulerOS::on_OK_clicked()
 
         hide();
         mainwindow= new MainWindow(this);
+
         mainwindow->show();
+
 
     //i want in the main window after adding the process with same concept as up want to tell me in status bar succesfully done press graph again
 }

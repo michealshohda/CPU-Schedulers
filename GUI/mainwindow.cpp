@@ -12,7 +12,7 @@
 #include "global.h"
 #include <QThread>
 #include<Qlist>
-#include "rectangle.h"
+
 
 QList<rectangle> rectanglesHistory ;
 int leftMargin = 100;  //aseb msafa ad eh abl ma arsm
@@ -30,13 +30,20 @@ MainWindow::MainWindow(QWidget *parent)
     //ui->graphicsView->setMinimumSize(800, 600);
 
     //scene->setSceneRect(0, 0, 2000, 1000);
-
-
+    ui->prioritySpinBox->setVisible(false);
+    ui->priorityLable->setVisible(false);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::showPriorityOption(bool show)
+{
+    ui->prioritySpinBox->setVisible(show);
+    ui->priorityLable->setVisible(show);
+
 }
 
 void MainWindow::clearGraph(){
@@ -50,6 +57,7 @@ void MainWindow::clearGraph(){
 }
 //function to Write labels (Processes: and RemainingTime )
 void MainWindow::setupLegendLabels() {
+
     QGraphicsTextItem* processesLabel = scene->addText("Processes:");
     processesLabel->setDefaultTextColor(Qt::white);
     processesLabel->setFont(QFont("Arial", 10, QFont::Bold));
@@ -284,6 +292,10 @@ void MainWindow::on_pushButton_clicked()
     drawGraphOutlines(totalBurstTime);
     setupLegendLabels();
 
+    // if (dynamic_cast<PriorityPreemptiveScheduler*>(scheduler)||dynamic_cast<PriorityNonPreemptiveScheduler*>(scheduler)) {
+    //     showPriorityOption(true);
+    // }
+
 
 
 
@@ -326,7 +338,6 @@ void MainWindow::on_pushButton_clicked()
 
 
 
-
     //el naaaaa2sssssss
     /* add graph lables :2ly hya kol process deh el color bt3ha eh (el function ghza bs a7otha fen ?!)
      * add check box if he wants el gantchart 3la tool with no live view:
@@ -355,10 +366,22 @@ void MainWindow::on_newProccesButton_clicked()
     int viewWidth = ui->graphicsView->viewport()->width(); //update scale Factor
     scaleFactor = (viewWidth - leftMargin - 20) / static_cast<double>(totalBurstTime);
     Re_drawRectangles();
+    if (dynamic_cast<PriorityPreemptiveScheduler*>(scheduler)||dynamic_cast<PriorityNonPreemptiveScheduler*>(scheduler)) {
+        int priority = ui->prioritySpinBox->value();
+        sim->addProcess(Process(pid_Global+1,sim->getCurrentTime(),ui->newProcessspinBox->value(),priority));
+        writeRemainingTime(pid_Global+1, ui->newProcessspinBox->value());
+        drawLabels(pid_Global+1);
+        pid_Global++ ;
+
+    }
+    else{
     sim->addProcess(Process(pid_Global+1,sim->getCurrentTime(),ui->newProcessspinBox->value()));
     drawLabels(pid_Global+1);
     writeRemainingTime(pid_Global+1, ui->newProcessspinBox->value());
     pid_Global++ ;
+    }
+    //di el mafrood 3nd el start button bs fi moshkla eno lazm adous add process fa yban fa el 7al 27otaha fl start tb fi moshkla tanya eno mt3araf el data hna fa eh el wad3?
+
 
 
     /*

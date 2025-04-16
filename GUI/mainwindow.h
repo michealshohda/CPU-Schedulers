@@ -30,6 +30,7 @@ public:
     void setupLegendLabels();
 
 
+    void showPriorityOption(bool show);
 
 
 private slots:

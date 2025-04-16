@@ -7,9 +7,17 @@ MAINmainwindow::MAINmainwindow(QWidget *parent)
     , ui(new Ui::MAINmainwindow)
 {
     ui->setupUi(this);
+    QPalette palette;
+    QPixmap pixmap("OSbackground.jpg"); // Provide the path to your image
+    palette.setBrush(QPalette::Window, QBrush(pixmap));  // Use QPalette::Window instead of Background
+    setPalette(palette);
 
-    QPixmap pix1(":/en_logo.png");
-    ui->labelpic->setPixmap(pix1.scaled(525,150,Qt::KeepAspectRatio));
+//setFixedSize(612, 320);
+    // this->setStyleSheet("background-image: url(:/OSbackground.jpg);"
+    //                     "background-repeat: no-repeat;"
+    //                     "background-position: center;"
+    //                     "background-color: white;");
+
     ui->comboBox->addItem("FCFS");
     ui->comboBox->addItem("SJF");
     ui->comboBox->addItem("PRIORITY");
