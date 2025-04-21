@@ -11,11 +11,13 @@
 #include "cpuscheduleros.h"
 #include "global.h"
 #include <QThread>
-#include<Qlist>
+#include <Qlist>
+#include "rectangle.h"
 
 
 QList<rectangle> rectanglesHistory ;
 int leftMargin = 100;  //aseb msafa ad eh abl ma arsm
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -287,130 +289,89 @@ void  MainWindow::drawGraphOutlines(int burstTime ){
 
 void MainWindow::on_pushButton_clicked()
 {
+    if (!StartWasClickedBefore){
 
-    totalBurstTime = sim->getInitialTotalBurstTime();  // total burst time
-    drawGraphOutlines(totalBurstTime);
-    setupLegendLabels();
-
-    // if (dynamic_cast<PriorityPreemptiveScheduler*>(scheduler)||dynamic_cast<PriorityNonPreemptiveScheduler*>(scheduler)) {
-    //     showPriorityOption(true);
-    // }
+        StartWasClickedBefore=true;
+        totalBurstTime = sim->getInitialTotalBurstTime();  // total burst time
+        drawGraphOutlines(totalBurstTime);
+        setupLegendLabels();
 
 
 
 
-      //----make a new thread------
-        QThread *thread = new QThread;
+          //----make a new thread------
+            QThread *thread = new QThread;
 
-        // connect your existing GUI update slots to simulator's signals
-        connect(sim, &CPUSimulator::drawProcessBlock, this, [=](int x, int y, int pid, int width){ //el variables dol seems weired
-            drawProcessBlock(x, y, pid, width); // safe GUI call
-        });
-        connect(sim, &CPUSimulator::drawLabelsWithRemainingTime, this, [=](int pid, int remainingTime) {
-            drawLabels(pid);
-            writeRemainingTime(pid,remainingTime);
-        });
-        connect(sim, &CPUSimulator::updateRemainingTime, this, [=](int pid,int remainingTime) {
-            writeRemainingTime(pid,remainingTime);
-        });
+            // connect your existing GUI update slots to simulator's signals
+            connect(sim, &CPUSimulator::drawProcessBlock, this, [=](int x, int y, int pid, int width){ //el variables dol seems weired
+                drawProcessBlock(x, y, pid, width); // safe GUI call
+            });
+            connect(sim, &CPUSimulator::drawLabelsWithRemainingTime, this, [=](int pid, int remainingTime) {
+                drawLabels(pid);
+                writeRemainingTime(pid,remainingTime);
+            });
+            connect(sim, &CPUSimulator::updateRemainingTime, this, [=](int pid,int remainingTime) {
+                writeRemainingTime(pid,remainingTime);
+            });
 
-        // Cleanup after done
-        connect(sim, &CPUSimulator::finished, thread, &QThread::quit);
-        connect(sim, &CPUSimulator::finished, sim, &CPUSimulator::deleteLater);
-        connect(thread, &QThread::finished, thread, &QThread::deleteLater);
-
-
-        // Move simulator to thread
-        sim->moveToThread(thread);
-
-        // Start simulation when thread starts
-        connect(thread, &QThread::started, sim, [=]() {
-            if (ui->noLiveCheckBox->isChecked()) {
-                sim->runSimulation_notLive();
-            } else {
-
-                sim->runSimulation();
-            }
-        });
-
-        thread->start();
-       //---------
+            // Cleanup after done
+            connect(sim, &CPUSimulator::finished, thread, &QThread::quit);
+            connect(sim, &CPUSimulator::finished, sim, &CPUSimulator::deleteLater);
+            connect(thread, &QThread::finished, thread, &QThread::deleteLater);
 
 
+            // Move simulator to thread
+            sim->moveToThread(thread);
 
-    //el naaaaa2sssssss
-    /* add graph lables :2ly hya kol process deh el color bt3ha eh (el function ghza bs a7otha fen ?!)
-     * add check box if he wants el gantchart 3la tool with no live view:
-     *                                              s3tha htb2a run.simulation() 3ady gdn bs hnshel kol sleep() mmkn n3mlha as new function
-     * tournaround & waiting time show in gui
+            // Start simulation when thread starts
+            connect(thread, &QThread::started, sim, [=]() {
+                if (ui->noLiveCheckBox->isChecked()) {
+                    sim->runSimulation_notLive();
+                } else {
+
+                    sim->runSimulation();
+                }
+            });
+
+            thread->start();
+           //---------
 
 
-*/
 
+
+
+
+
+    }
 }
 
 
 void MainWindow::on_newProccesButton_clicked()
 {
-/*
-// pass it's data:
-                    *ana 3awz a3rf a5er PID 3lshan adeh lel gdead +1(done)
-                    *ana 3awz azwd 7ta lel piority if the selected schdular is a piority
-                    ** lw el procces 5elst , run.simulation ht5ls fa el thread ht2fel, ..bs hwa mmkn yadd new process.. 7d yshoflna 7l , n8yr condition el while fel run.simulation we tb2a while true ?!
 
-// gui of adding new process and redraw(shrink) the already drawn processes(done)
-*/
-    clearGraph();
-    totalBurstTime += ui->newProcessspinBox->value() ;
-    drawGraphOutlines(totalBurstTime) ;
-    int viewWidth = ui->graphicsView->viewport()->width(); //update scale Factor
-    scaleFactor = (viewWidth - leftMargin - 20) / static_cast<double>(totalBurstTime);
-    Re_drawRectangles();
-    if (dynamic_cast<PriorityPreemptiveScheduler*>(scheduler)||dynamic_cast<PriorityNonPreemptiveScheduler*>(scheduler)) {
-        int priority = ui->prioritySpinBox->value();
-        sim->addProcess(Process(pid_Global+1,sim->getCurrentTime(),ui->newProcessspinBox->value(),priority));
-        writeRemainingTime(pid_Global+1, ui->newProcessspinBox->value());
+    if(StartWasClickedBefore){
+        clearGraph();
+        totalBurstTime += ui->newProcessspinBox->value() ;
+        drawGraphOutlines(totalBurstTime) ;
+        int viewWidth = ui->graphicsView->viewport()->width(); //update scale Factor
+        scaleFactor = (viewWidth - leftMargin - 20) / static_cast<double>(totalBurstTime);
+        Re_drawRectangles();
+        if (dynamic_cast<PriorityPreemptiveScheduler*>(scheduler)||dynamic_cast<PriorityNonPreemptiveScheduler*>(scheduler)) {
+            int priority = ui->prioritySpinBox->value();
+            sim->addProcess(Process(pid_Global+1,sim->getCurrentTime(),ui->newProcessspinBox->value(),priority));
+            writeRemainingTime(pid_Global+1, ui->newProcessspinBox->value());
+            drawLabels(pid_Global+1);
+            pid_Global++ ;
+
+        }
+        else{
+        sim->addProcess(Process(pid_Global+1,sim->getCurrentTime(),ui->newProcessspinBox->value()));
         drawLabels(pid_Global+1);
+        writeRemainingTime(pid_Global+1, ui->newProcessspinBox->value());
         pid_Global++ ;
+        }
 
     }
-    else{
-    sim->addProcess(Process(pid_Global+1,sim->getCurrentTime(),ui->newProcessspinBox->value()));
-    drawLabels(pid_Global+1);
-    writeRemainingTime(pid_Global+1, ui->newProcessspinBox->value());
-    pid_Global++ ;
-    }
-    //di el mafrood 3nd el start button bs fi moshkla eno lazm adous add process fa yban fa el 7al 27otaha fl start tb fi moshkla tanya eno mt3araf el data hna fa eh el wad3?
-
-
-
-    /*
-     * --na2s :
-     * h3ml history lel last drawed rectangels to re-draw them
-     * tzbeet el UI/Ux ()
-     *          -in adding new process , add piority section if sechdular is piority sechdeular
-     *          -add
-     * time :
-     *      - draw process
-     *      - stauts bar (table)
-     *
-     *
-     *
-      */
-
-
-    /*
-     * @m7tag ehh mn el back-end:
-     * intial total burst time
-     * main function to send :
-     *                         pid that allocat the CPU this sec (i smapped to a color)
-     *
-     *
-     * backend need to handel :: when add new proccess , i want to give it a pid
-
-
-    */
-
 }
 
 

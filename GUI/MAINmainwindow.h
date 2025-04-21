@@ -21,10 +21,12 @@ private slots:
     void on_finish_clicked();
     void on_Next_clicked();
 
+
 private:
     Ui::MAINmainwindow *ui;    // Pointer to UI class (must match .ui file)
     CPUSchedulerOS *cpuscheduler;
     void updateStatusBar(const QString &algorithm);
+    void setBackgroundImage(QMainWindow *window, const QString &imagePath);
 };
 
 #endif // MAINMAINWINDOW_H

@@ -46,10 +46,10 @@ void CPUSchedulerOS::updateUI()
      if (currentAlgorithm == "PRIORITY") {
        setupPriorityUI(gridLayout);
      }
-    else if (currentAlgorithm == "SJF") {
+    else if (currentAlgorithm == "Shortest Job First") {
        setupSJFUI(gridLayout);
     }
-   else if (currentAlgorithm == "RR") {
+   else if (currentAlgorithm == "Round Robin") {
        setupRRUI(gridLayout);
      }
     else {
@@ -231,7 +231,7 @@ void CPUSchedulerOS::on_OK_clicked()
         //     return;
         // }
         bool preemptive = false;
-        if (currentAlgorithm == "SJF" ) {
+        if (currentAlgorithm == "Shortest Job First" ) {
         preemptive = isPreemptive();
             if(preemptive)
                 scheduler=new SJFPScheduler();
@@ -254,7 +254,7 @@ void CPUSchedulerOS::on_OK_clicked()
             qDebug() << "Preemptive mode in case PRIORITY:" << preemptive;
         }
         int quantum = 0;
-        if (currentAlgorithm == "RR" && quantumSpinBox) {
+        if (currentAlgorithm == "Round Robin" && quantumSpinBox) {
         quantum = quantumSpinBox->value();
             scheduler=new RoundRobinScheduler(quantum);
 
@@ -262,7 +262,7 @@ void CPUSchedulerOS::on_OK_clicked()
         qDebug() << "Time Quantum:" << quantum;
         }
 
-        if(currentAlgorithm=="FCFS")
+        if(currentAlgorithm=="First Come First Serve")
         {
             scheduler=new FCFSScheduler();
         }
@@ -290,6 +290,7 @@ void CPUSchedulerOS::on_OK_clicked()
         QMessageBox::information(this, "Success",
                                  QString("%1 processes added successfully").arg(processCount));
 
+        StartWasClickedBefore = false;
         hide();
         mainwindow= new MainWindow(this);
 

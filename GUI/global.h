@@ -7,4 +7,5 @@ class CPUSimulator;
 extern Scheduler *scheduler;
 extern CPUSimulator *sim;
 extern int pid_Global; // global pid that is givied to the new process
+extern bool StartWasClickedBefore ;
 #endif // GLOBAL_H
