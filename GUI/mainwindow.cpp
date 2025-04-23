@@ -90,26 +90,26 @@ void MainWindow::drawProcessBlock(int row, int startTime, int colorID, double pr
     // Map color ID to color
     QColor color;
     switch (colorID % 20) {
-    case 0:  color = Qt::red; break;
+
     case 1:  color = Qt::green; break;
     case 2:  color = Qt::blue; break;
     case 3:  color = Qt::yellow; break;
     case 4:  color = Qt::cyan; break;
     case 5:  color = Qt::magenta; break;
-    case 6:  color = Qt::gray; break;
-    case 7:  color = Qt::darkRed; break;
-    case 8:  color = Qt::darkGreen; break;
-    case 9:  color = Qt::darkBlue; break;
-    case 10: color = Qt::darkYellow; break;
-    case 11: color = Qt::darkCyan; break;
-    case 12: color = Qt::darkMagenta; break;
-    case 13: color = Qt::darkGray; break;
-    case 14: color = Qt::lightGray; break;
-    case 15: color = QColor("#FFA07A"); break; // LightSalmon
-    case 16: color = QColor("#20B2AA"); break; // LightSeaGreen
-    case 17: color = QColor("#9370DB"); break; // MediumPurple
-    case 18: color = QColor("#FF69B4"); break; // HotPink
-    case 19: color = QColor("#87CEFA"); break; // LightSkyBlue
+    case 6:  color = Qt::red; break;
+    case 7:  color = QColor(255, 165, 0);  break;   // Orange break;
+    case 8:  color = QColor(255, 105, 180); break;  // Hot Pink break;
+    case 9:  color = QColor(255, 250, 240); break;   // Floral White (Off-white) break;
+    case 10: color = QColor(128, 0, 128);  break;    // Purple
+    case 11: color = QColor(139, 69, 19);  break;    // Saddle Brown
+    case 12: color = QColor(137, 207, 240);  break; // Baby Blue break;
+    case 13: color = Qt::gray; break;
+    case 14: color = QColor("#FF6347"); break;  // Tomato
+    case 15: color = QColor("#FFD700"); break;  // Gold
+    case 16: color = QColor("#00CED1"); break;  // DarkTurquoise
+    case 17: color = QColor("#FF4500"); break;  // OrangeRed
+    case 18: color = QColor("#8A2BE2"); break;  // BlueViolet
+    case 19: color = QColor("#BA55D3"); break;  // MediumOrchid
     default: color = Qt::black; break;
     }
 
@@ -213,26 +213,25 @@ void MainWindow::drawLabels(int pid ){
     // Map color ID to color
     QColor color;
     switch (pid % 20) {
-    case 0:  color = Qt::red; break;
     case 1:  color = Qt::green; break;
     case 2:  color = Qt::blue; break;
     case 3:  color = Qt::yellow; break;
     case 4:  color = Qt::cyan; break;
     case 5:  color = Qt::magenta; break;
-    case 6:  color = Qt::gray; break;
-    case 7:  color = Qt::darkRed; break;
-    case 8:  color = Qt::darkGreen; break;
-    case 9:  color = Qt::darkBlue; break;
-    case 10: color = Qt::darkYellow; break;
-    case 11: color = Qt::darkCyan; break;
-    case 12: color = Qt::darkMagenta; break;
-    case 13: color = Qt::darkGray; break;
-    case 14: color = Qt::lightGray; break;
-    case 15: color = QColor("#FFA07A"); break; // LightSalmon
-    case 16: color = QColor("#20B2AA"); break; // LightSeaGreen
-    case 17: color = QColor("#9370DB"); break; // MediumPurple
-    case 18: color = QColor("#FF69B4"); break; // HotPink
-    case 19: color = QColor("#87CEFA"); break; // LightSkyBlue
+    case 6:  color = Qt::red; break;
+    case 7:  color = QColor(255, 165, 0);  break;   // Orange break;
+    case 8:  color = QColor(255, 105, 180); break;  // Hot Pink break;
+    case 9:  color = QColor(255, 250, 240); break;   // Floral White (Off-white) break;
+    case 10: color = QColor(128, 0, 128);  break;    // Purple
+    case 11: color = QColor(139, 69, 19);  break;    // Saddle Brown
+    case 12: color = QColor(137, 207, 240);  break; // Baby Blue break;
+    case 13: color = Qt::gray; break;
+    case 14: color = QColor("#FF6347"); break;  // Tomato
+    case 15: color = QColor("#FFD700"); break;  // Gold
+    case 16: color = QColor("#00CED1"); break;  // DarkTurquoise
+    case 17: color = QColor("#FF4500"); break;  // OrangeRed
+    case 18: color = QColor("#8A2BE2"); break;  // BlueViolet
+    case 19: color = QColor("#BA55D3"); break;  // MediumOrchid
     default: color = Qt::black; break;
     }
 
@@ -300,11 +299,14 @@ void MainWindow::on_pushButton_clicked()
             showPriorityOption(true);
         }
         StartWasClickedBefore=true;
+
+
         totalBurstTime = sim->getInitialTotalBurstTime();  // total burst time
         //TotalGraph = totalBurstTime + //m7tag a3ml 7asb el idel time
         drawGraphOutlines(totalBurstTime); //m7tag a3ml 7asb el idel time
         setupLegendLabels();
-
+        label_X = 150;
+        label_X_remaining_time = 150 ;
 
 
 
