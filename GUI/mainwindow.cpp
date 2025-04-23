@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     timer = new QTimer(this);
+
     setFixedSize(1000, 600);
     scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);  // <-- attach your scene to the view
@@ -46,6 +47,10 @@ void MainWindow::showPriorityOption(bool show)
     ui->prioritySpinBox->setVisible(show);
     ui->priorityLable->setVisible(show);
 
+}
+
+int calcIdleTime (){
+    int idleCounter =0;
 }
 
 void MainWindow::clearGraph(){
@@ -291,57 +296,56 @@ void MainWindow::on_pushButton_clicked()
 {
     if (!StartWasClickedBefore){
 
+        scene->clear();
+        rectanglesHistory.clear();
+        if (dynamic_cast<PriorityPreemptiveScheduler*>(scheduler) != nullptr ||dynamic_cast<PriorityNonPreemptiveScheduler*>(scheduler) != nullptr){
+            showPriorityOption(true);
+        }
         StartWasClickedBefore=true;
         totalBurstTime = sim->getInitialTotalBurstTime();  // total burst time
-        drawGraphOutlines(totalBurstTime);
+        //TotalGraph = totalBurstTime + //m7tag a3ml 7asb el idel time
+        drawGraphOutlines(totalBurstTime); //m7tag a3ml 7asb el idel time
         setupLegendLabels();
 
 
 
 
-          //----make a new thread------
-            QThread *thread = new QThread;
+      //----make a new thread------
+        QThread *thread = new QThread;
 
-            // connect your existing GUI update slots to simulator's signals
-            connect(sim, &CPUSimulator::drawProcessBlock, this, [=](int x, int y, int pid, int width){ //el variables dol seems weired
-                drawProcessBlock(x, y, pid, width); // safe GUI call
-            });
-            connect(sim, &CPUSimulator::drawLabelsWithRemainingTime, this, [=](int pid, int remainingTime) {
-                drawLabels(pid);
-                writeRemainingTime(pid,remainingTime);
-            });
-            connect(sim, &CPUSimulator::updateRemainingTime, this, [=](int pid,int remainingTime) {
-                writeRemainingTime(pid,remainingTime);
-            });
+        // connect your existing GUI update slots to simulator's signals
+        connect(sim, &CPUSimulator::drawProcessBlock, this, [=](int x, int y, int pid, int width){ //el variables dol seems weired
+            drawProcessBlock(x, y, pid, width); // safe GUI call
+        });
+        connect(sim, &CPUSimulator::drawLabelsWithRemainingTime, this, [=](int pid, int remainingTime) {
+            drawLabels(pid);
+            writeRemainingTime(pid,remainingTime);
+        });
+        connect(sim, &CPUSimulator::updateRemainingTime, this, [=](int pid,int remainingTime) {
+            writeRemainingTime(pid,remainingTime);
+        });
 
-            // Cleanup after done
-            connect(sim, &CPUSimulator::finished, thread, &QThread::quit);
-            connect(sim, &CPUSimulator::finished, sim, &CPUSimulator::deleteLater);
-            connect(thread, &QThread::finished, thread, &QThread::deleteLater);
-
-
-            // Move simulator to thread
-            sim->moveToThread(thread);
-
-            // Start simulation when thread starts
-            connect(thread, &QThread::started, sim, [=]() {
-                if (ui->noLiveCheckBox->isChecked()) {
-                    sim->runSimulation_notLive();
-                } else {
-
-                    sim->runSimulation();
-                }
-            });
-
-            thread->start();
-           //---------
+        // Cleanup after done
+        connect(sim, &CPUSimulator::finished, thread, &QThread::quit);
+        connect(sim, &CPUSimulator::finished, sim, &CPUSimulator::deleteLater);
+        connect(thread, &QThread::finished, thread, &QThread::deleteLater);
 
 
+        // Move simulator to thread
+        sim->moveToThread(thread);
 
+        // Start simulation when thread starts
+        connect(thread, &QThread::started, sim, [=]() {
+            if (ui->noLiveCheckBox->isChecked()) {
+                sim->runSimulation_notLive();
+            } else {
 
+                sim->runSimulation();
+            }
+        });
 
-
-
+        thread->start();
+       //---------
     }
 }
 

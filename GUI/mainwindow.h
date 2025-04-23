@@ -47,6 +47,7 @@ private:
 
     double scaleFactor =40 ;
     int totalBurstTime = 0 ;
+    int TotalGraph = 0 ;
 
 
     void drawGraphOutlines(int burstTime );
