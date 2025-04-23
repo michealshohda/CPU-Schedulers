@@ -29,7 +29,7 @@ public:
     void writeRemainingTime(int pid, int remainingTime);
     void setupLegendLabels();
 
-
+    void d();
     void showPriorityOption(bool show);
 
 

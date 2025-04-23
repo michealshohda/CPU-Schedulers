@@ -41,12 +41,45 @@ double StatisticsCalculator::getAverageWaitingTime() const
     return static_cast<double>(accumulate(wt.begin(), wt.end(), 0)) / wt.size();
 }
 
+// int StatisticsCalculator::getTotalBurstTime(const std::map<int, Process> &processMap)
+// {
+//     int total = 0;
+//     for (const auto &[pid, process] : processMap)
+//     {
+//         total += process.burstTime;
+//     }
+//     return total;
+// }
 int StatisticsCalculator::getTotalBurstTime(const std::map<int, Process> &processMap)
 {
-    int total = 0;
+    // Step 1: Extract and sort by arrival time
+    std::vector<Process> sortedProcesses;
     for (const auto &[pid, process] : processMap)
     {
-        total += process.burstTime;
+        sortedProcesses.push_back(process);
     }
-    return total;
+
+    std::sort(sortedProcesses.begin(), sortedProcesses.end(), [](const Process &a, const Process &b) {
+        return a.arrivalTime < b.arrivalTime;
+    });
+
+    // Step 2: Simulate scheduling to include idle time
+    int currentTime = 0;
+    int totalTime = 0;
+
+    for (const auto &process : sortedProcesses)
+    {
+        if (process.arrivalTime > currentTime)
+        {
+            // Add idle time
+            totalTime += process.arrivalTime - currentTime;
+            currentTime = process.arrivalTime;
+        }
+
+        totalTime += process.burstTime;
+        currentTime += process.burstTime;
+    }
+
+    return totalTime;
 }
+

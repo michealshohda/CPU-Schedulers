@@ -15,8 +15,8 @@ void CPUSimulator::runSimulation()
         emit drawLabelsWithRemainingTime(it->first,it->second.burstTime);
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    while (true)
-    { if(processMap.empty()) continue;
+    while (!processMap.empty())
+    {
         scheduler->updateQueue(currentTime);
         Process *p = scheduler->getNextProcess(currentTime);
 
@@ -63,16 +63,17 @@ void CPUSimulator::runSimulation()
             currentTime++;
         }
     }
-    // emit finished();
+    emit draw();
+    emit finished();
 }
 
-int CPUSimulator::runSimulation_notLive(){
+void CPUSimulator::runSimulation_notLive(){
     for (auto it = processMap.begin(); it != processMap.end(); ++it) {
         emit drawLabelsWithRemainingTime(it->first,it->second.burstTime);
     }
    // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    while (true)
-    { if(processMap.empty()) continue;
+    while (!processMap.empty())
+    {
         scheduler->updateQueue(currentTime);
         Process *p = scheduler->getNextProcess(currentTime);
 
@@ -119,6 +120,8 @@ int CPUSimulator::runSimulation_notLive(){
             currentTime++;
         }
     }
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    emit draw();
     // emit finished();
 }
 

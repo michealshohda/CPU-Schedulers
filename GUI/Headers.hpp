@@ -5,5 +5,6 @@
 #include <iostream>
 #include <numeric>
 #include<map>
+#include<algorithm>
 
 using namespace std;

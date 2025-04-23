@@ -33,7 +33,7 @@ public:
     double avgWaitingTime();
     double avgTurnaroundTime();
     int getInitialTotalBurstTime();
-    int runSimulation_notLive();
+    void runSimulation_notLive();
     int getCurrentTime();
 
 signals:
@@ -41,6 +41,7 @@ signals:
     void drawLabels(int pid );
     void drawLabelsWithRemainingTime(int pid, int remainingTime);
     void updateRemainingTime(int pid, int remainingTime);
+    void draw();
     void finished();
 };
 

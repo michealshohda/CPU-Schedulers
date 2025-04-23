@@ -128,13 +128,14 @@ void MainWindow::drawProcessBlock(int row, int startTime, int colorID, double pr
     rectanglesHistory.append({startTime,colorID}) ;
 
     //calc turnaroundtime & waiting time if this is the last rectangle to draw
-    if(startTime==totalBurstTime-1){
-        ui->turnarounTimeLable->setText(QString::number(sim->avgTurnaroundTime()));
-        ui->waitingTimeLable->setText(QString::number(sim->avgWaitingTime()));
-    }
+
 
 }
 
+void MainWindow::d(){
+    ui->turnarounTimeLable->setText(QString::number(sim->avgTurnaroundTime()));
+    ui->waitingTimeLable->setText(QString::number(sim->avgWaitingTime()));
+}
 
 void MainWindow::Re_drawRectangles() {
 
@@ -279,16 +280,13 @@ void  MainWindow::drawGraphOutlines(int burstTime ){
         int x = leftMargin + t * scaleFactor;
         scene->addLine(x, startY, x, startY + numRows * rowHeight, QPen(Qt::white));
 
-        QGraphicsTextItem *text = scene->addText(QString::number(t) );
+        QGraphicsTextItem *text = scene->addText(QString::number(t));
         text->setPos(x - 10, startY+40);
     }
 
     scene->addLine(leftMargin, startY, leftMargin, startY + numRows * rowHeight, QPen(Qt::white));
     scene->addLine(leftMargin, startY + numRows * rowHeight,
                    leftMargin + burstTime * scaleFactor, startY + numRows * rowHeight, QPen(Qt::white));
-
-
-
 }
 
 
@@ -324,6 +322,10 @@ void MainWindow::on_pushButton_clicked()
         connect(sim, &CPUSimulator::updateRemainingTime, this, [=](int pid,int remainingTime) {
             writeRemainingTime(pid,remainingTime);
         });
+        connect(sim, &CPUSimulator::draw, this, [=]() {
+            d();
+            ui->newProccesButton->setDisabled(true);
+        });
 
         // Cleanup after done
         connect(sim, &CPUSimulator::finished, thread, &QThread::quit);
@@ -352,7 +354,6 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_newProccesButton_clicked()
 {
-
     if(StartWasClickedBefore){
         clearGraph();
         totalBurstTime += ui->newProcessspinBox->value() ;
